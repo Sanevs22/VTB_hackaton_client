@@ -1,6 +1,12 @@
 <tui-root>
-  <button tuiButton icon="tuiIconSettings">Button</button>
-
-  <app-map>Test</app-map>
+  <app-header />
+  <div class="content">
+    <div class="map">
+      <app-map />
+    </div>
+    <div class="widget">
+      <app-widget />
+    </div>
+  </div>
   <router-outlet></router-outlet>
 </tui-root>

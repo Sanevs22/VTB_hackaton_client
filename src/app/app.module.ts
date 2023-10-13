@@ -11,7 +11,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TuiButtonModule, TuiDataListModule } from '@taiga-ui/core';
+import { TuiDataListModule } from '@taiga-ui/core';
 import {
   TuiIslandModule,
   TuiTagModule,
@@ -21,12 +21,12 @@ import {
   TuiCheckboxLabeledModule,
 } from '@taiga-ui/kit';
 import { TuiTableModule, TuiTableFiltersModule } from '@taiga-ui/addon-table';
-import { MapModule } from './map/map.module';
+import { ComponentsModule } from './components/components.module';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    MapModule,
+    ComponentsModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -34,7 +34,6 @@ import { MapModule } from './map/map.module';
     TuiDialogModule,
     TuiAlertModule,
     TuiIslandModule,
-    TuiButtonModule,
     TuiTableModule,
     TuiTagModule,
     TuiTableFiltersModule,
