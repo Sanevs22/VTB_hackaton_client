@@ -12,6 +12,7 @@ import { TuiLoaderModule } from '@taiga-ui/core';
 import { TuiDataListModule } from '@taiga-ui/core';
 import { TuiComboBoxModule, TuiDataListWrapperModule } from '@taiga-ui/kit';
 import { DepartmentListComponent } from './department-list/department-list.component';
+import { TuiGroupModule } from '@taiga-ui/core';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { DepartmentListComponent } from './department-list/department-list.compo
     TuiLoaderModule,
     TuiDataListModule,
     TuiComboBoxModule,
+    TuiGroupModule,
   ],
   exports: [HeaderComponent, MapComponent, WidgetComponent],
 })

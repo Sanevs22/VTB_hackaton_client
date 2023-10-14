@@ -1,5 +1,3 @@
-.main {
-}
 .block {
   padding: 5px 10px;
   cursor: pointer;
@@ -37,4 +35,86 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.path {
+  padding: 20px 10px;
+}
+
+.quize {
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  .text {
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 700;
+  }
+}
+
+.ticket {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .number {
+    gap: 20px;
+    border-radius: 8px;
+    padding: 8px;
+    background: #fff;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    .header {
+      font-size: 20px;
+      line-height: 22px;
+      font-weight: 700;
+    }
+
+    .block_ticket {
+      font-size: 70px;
+      line-height: 70px;
+      font-weight: 700;
+    }
+
+    .text {
+      font-size: 20px;
+      line-height: 22px;
+      font-weight: 500;
+    }
+  }
+
+  .link {
+    background-color: #002882;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin: 10px;
+    padding: 12px 8px;
+
+    .logo {
+      height: 150px;
+    }
+
+    .text {
+      align-content: center;
+      color: #fff;
+      font-size: 16px;
+      line-height: 18px;
+      font-weight: 300;
+      a {
+        color: #fff;
+      }
+
+      a:active {
+        color: #fff;
+      }
+    }
+  }
 }

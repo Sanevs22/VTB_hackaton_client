@@ -14,7 +14,8 @@ export class DepartmentListComponent implements OnInit {
   @Input()
   departmentList: Department[] | null = [];
 
-  public isOpen = false;
+  public isOpen: 'list' | 'depart' | 'path' = 'list';
+  quize = 'none';
 
   currentDepartment = new BehaviorSubject<Department>({
     id: -1,
@@ -30,7 +31,7 @@ export class DepartmentListComponent implements OnInit {
 
   constructor(
     private readonly mapService: MapService,
-    private readonly apiService: ApiService,
+    public readonly apiService: ApiService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {}
   ngOnInit(): void {
@@ -41,7 +42,7 @@ export class DepartmentListComponent implements OnInit {
         );
         console.log(this.departmentList[0]);
       }
-      this.isOpen = true;
+      this.isOpen = 'depart';
     });
   }
 
@@ -49,11 +50,11 @@ export class DepartmentListComponent implements OnInit {
     this.mapService.setView(department.officePoint);
     console.log(department);
     this.currentDepartment.next(department);
-    this.isOpen = true;
+    this.isOpen = 'depart';
   }
 
   close() {
-    this.isOpen = false;
+    this.isOpen = 'list';
   }
 
   setPath() {
@@ -62,6 +63,7 @@ export class DepartmentListComponent implements OnInit {
 
     if (from.lat > 0) {
       this.apiService.getPath(from, to.officePoint, 'car');
+      this.isOpen = 'path';
     } else {
       this.alerts
         .open('Введите свой адрес, чтобы проложить маршрут', {
@@ -69,5 +71,13 @@ export class DepartmentListComponent implements OnInit {
         })
         .subscribe();
     }
+  }
+
+  startQuize() {
+    this.quize = 'start';
+  }
+
+  getTicket() {
+    this.quize = 'ticket';
   }
 }

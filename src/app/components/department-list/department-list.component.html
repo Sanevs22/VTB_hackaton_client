@@ -1,5 +1,7 @@
 <div
-  *ngIf="departmentList !== null && departmentList.length > 0 && !isOpen"
+  *ngIf="
+    departmentList !== null && departmentList.length > 0 && isOpen === 'list'
+  "
   class="main"
 >
   <div
@@ -16,7 +18,7 @@
   </div>
 </div>
 
-<div *ngIf="isOpen" class="department">
+<div *ngIf="isOpen === 'depart'" class="department">
   <div *ngIf="currentDepartment | async as dep" class="department">
     <div class="header">
       <div class="text">{{ dep.name }}</div>
@@ -39,6 +41,87 @@
     <div class="address">
       <p>Режим работы отделения</p>
       <p>пн-вс: 10:00-22:00</p>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isOpen === 'path'" class="path">
+  <div class="header">
+    <div class="text">Mаршрут построен</div>
+  </div>
+  <br />
+  <div *ngIf="this.apiService.mapPath | async as path" class="address">
+    <div *ngIf="path.time / 60 < 60">
+      Примерное время в пути составит
+      {{ path.time / 60 | number : "1.0-0" }} минут
+    </div>
+    <div *ngIf="path.time / 60 >= 60">
+      Примерное время в пути составит
+      {{ path.time / 3600 | number : "1.0-0" }} час
+    </div>
+  </div>
+  <br />
+  <div *ngIf="quize === 'none'" class="button">
+    <button tuiButton size="m" (click)="startQuize()">
+      Взять талон в электронной очереди
+    </button>
+  </div>
+  <div *ngIf="quize === 'start'" class="quize">
+    <div class="text">какая услуга вас интересует?</div>
+    <div tuiGroup class="group" [collapsed]="true" orientation="vertical">
+      <button
+        appearance="outline"
+        size="l"
+        tuiButton
+        type="button"
+        (click)="getTicket()"
+      >
+        Кредитование
+      </button>
+      <button
+        appearance="outline"
+        size="l"
+        tuiButton
+        type="button"
+        (click)="getTicket()"
+      >
+        Открыть вклад
+      </button>
+      <button
+        appearance="outline"
+        size="l"
+        tuiButton
+        type="button"
+        (click)="getTicket()"
+      >
+        Получить карту
+      </button>
+      <button
+        appearance="outline"
+        size="l"
+        tuiButton
+        type="button"
+        (click)="getTicket()"
+      >
+        Прочие
+      </button>
+    </div>
+  </div>
+  <div *ngIf="quize === 'ticket'" class="ticket">
+    <div class="number">
+      <div class="header">Ваш талон</div>
+      <div class="block_ticket">FW-38</div>
+      <div class="text">
+        Перед вами в очереди 5 человек, к вашему приходу как раз будет свободно!
+      </div>
+    </div>
+
+    <div class="link">
+      <img class="logo" src="./assets/VTB_logo-add_ru_rgb.png" alt="logo" />
+      <div class="text">
+        Вы так же можете воспользоваться этой услугой на нашем сайте
+        <a href="https://www.vtb.ru/" target="_blank">нашем сайте</a>
+      </div>
     </div>
   </div>
 </div>
