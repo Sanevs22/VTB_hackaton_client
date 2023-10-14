@@ -1,6 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as L from 'leaflet';
-import { BehaviorSubject, Subscription, debounceTime, skip, take } from 'rxjs';
+import {
+  BehaviorSubject,
+  Subscription,
+  debounceTime,
+  filter,
+  skip,
+  take,
+} from 'rxjs';
 import { Department } from 'src/app/interfaces/department';
 import { Point } from 'src/app/interfaces/point';
 import { ApiService } from 'src/app/services/api.service';
@@ -56,8 +63,11 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     this.moveEvent.pipe(debounceTime(300)).subscribe((e) => {
-      this.apiService.getDepartmentsList(e.point, e.zoom);
+      this.mapService.getDepartmentsList(e.point, e.zoom);
     });
+    this.mapService.currensView
+      .pipe(skip(1))
+      .subscribe((p) => this.map.setView([p.lat, p.lon], 17));
   }
 
   public ngOnDestroy(): void {
@@ -95,16 +105,26 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private async drowDepartmentMarket() {
-    this.departments = await this.apiService.getDepartments();
-    this.departmentMarkers.map((i) => i.remove());
-    this.departmentMarkers = [];
-    if (this.departments.length > 0) {
-      this.departments.map((i) => {
-        const marker = L.marker([i.officePoint.lat, i.officePoint.lon], {
-          icon: this.departmentMarkerIcon,
-        }).addTo(this.map);
-        this.departmentMarkers.push(marker);
-      });
-    }
+    this.mapService.departmentListText.pipe(skip(1)).subscribe((dep) => {
+      this.departments = dep;
+      this.departmentMarkers.map((i) => i.clearAllEventListeners());
+      this.departmentMarkers.map((i) => i.remove());
+      this.departmentMarkers = [];
+      if (this.departments.length > 0) {
+        this.departments.map((i) => {
+          const marker = L.marker([i.officePoint.lat, i.officePoint.lon], {
+            icon: this.departmentMarkerIcon,
+          }).addTo(this.map);
+          marker.addEventListener('click', (e) => {
+            this.mapService.currentOpenDepartment.next({
+              lat: e.latlng.lat,
+              lon: e.latlng.lng,
+            });
+            this.map.setView([e.latlng.lat, e.latlng.lng], 17);
+          });
+          this.departmentMarkers.push(marker);
+        });
+      }
+    });
   }
 }

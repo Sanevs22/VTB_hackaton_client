@@ -13,7 +13,6 @@ const URL = 'https://73fqls6k-5211.euw.devtunnels.ms';
 })
 export class ApiService {
   public departmentList = new BehaviorSubject<Department[]>([]);
-  public departmentListText = new BehaviorSubject<Department[]>([]);
 
   constructor(private readonly http: HttpClient) {}
 
@@ -41,18 +40,12 @@ export class ApiService {
     return department;
   }
 
-  public getDepartmentsList(point: Point, zoom: number) {
-    const department = offeser
-      .filter(
-        (i) =>
-          i.officePoint.lat < point.lat + 0.0002 * ((18 - zoom) * 20) &&
-          i.officePoint.lat > point.lat - 0.0002 * ((18 - zoom) * 20)
+  public async getPath(address: string) {
+    const point = await firstValueFrom(
+      this.http.get<{ displayName: string; point: Point }[]>(
+        `${URL}/api/User/address/${address}`
       )
-      .filter(
-        (i) =>
-          i.officePoint.lon < point.lon + 0.0002 * ((18 - zoom) * 20) &&
-          i.officePoint.lon > point.lon - 0.0002 * ((18 - zoom) * 20)
-      );
-    this.departmentListText.next(department);
+    );
+    return point;
   }
 }

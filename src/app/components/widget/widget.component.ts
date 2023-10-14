@@ -15,7 +15,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   constructor(
     public readonly apiService: ApiService,
-    private readonly mapService: MapService
+    public readonly mapService: MapService
   ) {}
 
   ngOnInit(): void {

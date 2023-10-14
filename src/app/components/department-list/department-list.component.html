@@ -1,4 +1,7 @@
-<div *ngIf="departmentList !== null && departmentList.length > 0" class="main">
+<div
+  *ngIf="departmentList !== null && departmentList.length > 0 && !isOpen"
+  class="main"
+>
   <div
     *ngFor="let department of departmentList; let i = index"
     class="block"
@@ -9,6 +12,29 @@
     </div>
     <div>
       {{ department.name }}
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isOpen" class="department">
+  <div *ngIf="currentDepartment | async as dep" class="department">
+    <div class="header">
+      <div class="text">{{ dep.name }}</div>
+      <button
+        tuiIconButton
+        size="m"
+        icon="tuiIconCloseLarge"
+        appearance="mono"
+        (click)="close()"
+      ></button>
+    </div>
+    <br />
+    <div class="address">{{ dep.address }}</div>
+    <div>{{ dep.status }}</div>
+    <br />
+    <button tuiButton size="m" (click)="setPath()">Проложить маршрут</button>
+    <div>
+      {{ dep.hasRamp ? "Доступно для маломобильных граждан" : "" }}
     </div>
   </div>
 </div>
