@@ -1,12 +1,24 @@
 <div class="main">
   <form [formGroup]="addressForm">
     <tui-input
-      tuiTextfieldIcon="tuiIconSearchLarge"
       formControlName="addressValue"
+      tuiTextfieldIcon="tuiIconSearchLarge"
+      placeholder="Город, улица, дом"
+      [tuiTextfieldCleaner]="true"
     >
       Ваш адрес
       <input placeholder="Город, улица, дом" tuiTextfield />
+      <tui-data-list-wrapper
+        *tuiDataList
+        [emptyContent]="content"
+        size="xs"
+        [items]="addressArrString"
+      ></tui-data-list-wrapper>
     </tui-input>
   </form>
   <button tuiButton icon="tuiIconSettings">Button</button>
 </div>
+
+<ng-template #content>
+  <tui-loader [showLoader]="true"></tui-loader>
+</ng-template>

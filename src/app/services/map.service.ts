@@ -27,4 +27,8 @@ export class MapService {
       (err) => console.log(err)
     );
   }
+
+  public setUserGeolocation(point: Point) {
+    this.userCoordinates.next(point);
+  }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Point } from '../interfaces/point';
-import { Observable, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { Address } from '../interfaces/address';
 
 const URL = 'https://73fqls6k-5211.euw.devtunnels.ms';
@@ -19,5 +19,14 @@ export class ApiService {
       )
     );
     return address;
+  }
+
+  public async getPointFromAddress(address: string) {
+    const point = await firstValueFrom(
+      this.http.get<{ displayName: string; point: Point }[]>(
+        `${URL}/api/User/address/${address}`
+      )
+    );
+    return point;
   }
 }
