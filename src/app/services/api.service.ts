@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Point } from '../interfaces/point';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { Address } from '../interfaces/address';
+import { Department } from '../interfaces/department';
 
 const URL = 'https://73fqls6k-5211.euw.devtunnels.ms';
 
@@ -10,6 +11,8 @@ const URL = 'https://73fqls6k-5211.euw.devtunnels.ms';
   providedIn: 'root',
 })
 export class ApiService {
+  public departmentList = new BehaviorSubject<Department[]>([]);
+
   constructor(private readonly http: HttpClient) {}
 
   public async getAddressFromPoint(point: Point) {
@@ -28,5 +31,15 @@ export class ApiService {
       )
     );
     return point;
+  }
+
+  public async getDepartmentFromPointAndZoom(point: Point, zoom: number) {
+    const department = await firstValueFrom(
+      this.http.get<Department[]>(
+        `${URL}/api/Offices/${zoom}/?x=${point.lon}&y=${point.lat}`
+      )
+    );
+    this.departmentList.next(department);
+    return department;
   }
 }

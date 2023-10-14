@@ -11,9 +11,10 @@ import { TuiSvgModule } from '@taiga-ui/core';
 import { TuiLoaderModule } from '@taiga-ui/core';
 import { TuiDataListModule } from '@taiga-ui/core';
 import { TuiComboBoxModule, TuiDataListWrapperModule } from '@taiga-ui/kit';
+import { DepartmentListComponent } from './department-list/department-list.component';
 
 @NgModule({
-  declarations: [HeaderComponent, MapComponent, WidgetComponent],
+  declarations: [HeaderComponent, MapComponent, WidgetComponent, DepartmentListComponent],
   imports: [
     CommonModule,
     TuiButtonModule,

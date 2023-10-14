@@ -14,7 +14,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   private subUserAddress!: Subscription;
 
   constructor(
-    private readonly apiService: ApiService,
+    public readonly apiService: ApiService,
     private readonly mapService: MapService
   ) {}
 

@@ -1,5 +1,5 @@
 <div class="main">
-  <form [formGroup]="addressForm">
+  <form [formGroup]="addressForm" class="form">
     <tui-input
       formControlName="addressValue"
       tuiTextfieldIcon="tuiIconSearchLarge"
@@ -16,7 +16,12 @@
       ></tui-data-list-wrapper>
     </tui-input>
   </form>
-  <button tuiButton icon="tuiIconSettings">Button</button>
+  <br />
+  <div class="list">
+    <app-department-list
+      [departmentList]="this.apiService.departmentList | async"
+    />
+  </div>
 </div>
 
 <ng-template #content>

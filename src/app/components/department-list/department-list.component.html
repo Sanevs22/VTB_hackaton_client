@@ -1,0 +1,10 @@
+<div *ngIf="departmentList !== null && departmentList.length > 0" class="main">
+  <div *ngFor="let department of departmentList; let i = index" class="block">
+    <div>
+      <img src="./assets/marketDepartment.png" alt="point" />
+    </div>
+    <div>
+      {{ department.name }}
+    </div>
+  </div>
+</div>
