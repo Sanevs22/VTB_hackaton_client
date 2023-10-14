@@ -34,6 +34,8 @@ export class MapComponent implements OnInit, OnDestroy {
   departments: Department[] = [];
   private departmentMarkers: L.Marker[] = [];
 
+  mapPath!: L.Polyline;
+
   public moveEvent = new BehaviorSubject<{ zoom: number; point: Point }>({
     zoom: 15,
     point: {
@@ -51,7 +53,6 @@ export class MapComponent implements OnInit, OnDestroy {
     this.initMap();
     this.getUserGeolocation();
     this.drowDepartmentMarket();
-
     this.map.on('move', () => {
       this.moveEvent.next({
         zoom: this.map.getZoom(),
@@ -68,6 +69,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.mapService.currensView
       .pipe(skip(1))
       .subscribe((p) => this.map.setView([p.lat, p.lon], 17));
+    this.drowPath();
   }
 
   public ngOnDestroy(): void {
@@ -125,6 +127,20 @@ export class MapComponent implements OnInit, OnDestroy {
           this.departmentMarkers.push(marker);
         });
       }
+    });
+  }
+
+  private drowPath() {
+    this.apiService.mapPath.pipe(skip(1)).subscribe((item) => {
+      if (this.mapPath) {
+        this.mapPath.remove();
+      }
+
+      const polylineArr = item.coordinates.map(
+        (i) => new L.LatLng(i.lat, i.lon)
+      );
+      this.mapPath = L.polyline(polylineArr, { color: 'blue' }).addTo(this.map);
+      this.map.fitBounds(this.mapPath.getBounds());
     });
   }
 }

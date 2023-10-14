@@ -13,6 +13,10 @@ const URL = 'https://73fqls6k-5211.euw.devtunnels.ms';
 })
 export class ApiService {
   public departmentList = new BehaviorSubject<Department[]>([]);
+  public mapPath = new BehaviorSubject<{ coordinates: Point[]; time: number }>({
+    coordinates: [],
+    time: -2,
+  });
 
   constructor(private readonly http: HttpClient) {}
 
@@ -40,12 +44,17 @@ export class ApiService {
     return department;
   }
 
-  public async getPath(address: string) {
-    const point = await firstValueFrom(
-      this.http.get<{ displayName: string; point: Point }[]>(
-        `${URL}/api/User/address/${address}`
+  public async getPath(
+    from: Point,
+    to: Point,
+    method: 'car' | 'foot' | 'bike'
+  ) {
+    const path = await firstValueFrom(
+      this.http.get<{ coordinates: Point[]; time: number }>(
+        `${URL}/api/Offices/route?fLon=${from.lon}&fLat=${from.lat}&tLon=${to.lon}&tLat=${to.lat}&profile=${method}`
       )
     );
-    return point;
+    console.log(path);
+    this.mapPath.next(path);
   }
 }

@@ -32,9 +32,13 @@
     <div class="address">{{ dep.address }}</div>
     <div>{{ dep.status }}</div>
     <br />
-    <button tuiButton size="m" (click)="setPath()">Проложить маршрут</button>
-    <div>
-      {{ dep.hasRamp ? "Доступно для маломобильных граждан" : "" }}
+    <div class="button">
+      <button tuiButton size="m" (click)="setPath()">Проложить маршрут</button>
+    </div>
+    <br />
+    <div class="address">
+      <p>Режим работы отделения</p>
+      <p>пн-вс: 10:00-22:00</p>
     </div>
   </div>
 </div>

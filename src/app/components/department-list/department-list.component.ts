@@ -3,6 +3,7 @@ import { BehaviorSubject, skip } from 'rxjs';
 import { Department } from 'src/app/interfaces/department';
 import { MapService } from 'src/app/services/map.service';
 import { TuiAlertService } from '@taiga-ui/core';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-department-list',
@@ -15,10 +16,21 @@ export class DepartmentListComponent implements OnInit {
 
   public isOpen = false;
 
-  currentDepartment = new BehaviorSubject<Department | false>(false);
+  currentDepartment = new BehaviorSubject<Department>({
+    id: -1,
+    name: '',
+    address: '',
+    officePoint: { lat: -1, lon: -1 },
+    status: '',
+    hasRamp: null,
+    openHoursData: [],
+    openHoursIndividualData: [],
+    servicesData: [],
+  });
 
   constructor(
     private readonly mapService: MapService,
+    private readonly apiService: ApiService,
     @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {}
   ngOnInit(): void {
@@ -46,8 +58,10 @@ export class DepartmentListComponent implements OnInit {
 
   setPath() {
     const from = this.mapService.userCoordinates.getValue();
+    const to = this.currentDepartment.getValue();
+
     if (from.lat > 0) {
-      console.log(from);
+      this.apiService.getPath(from, to.officePoint, 'car');
     } else {
       this.alerts
         .open('Введите свой адрес, чтобы проложить маршрут', {
