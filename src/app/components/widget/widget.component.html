@@ -1,5 +1,12 @@
 <div class="main">
-  widget works!
-  <br />
+  <form [formGroup]="addressForm">
+    <tui-input
+      tuiTextfieldIcon="tuiIconSearchLarge"
+      formControlName="addressValue"
+    >
+      Ваш адрес
+      <input placeholder="Город, улица, дом" tuiTextfield />
+    </tui-input>
+  </form>
   <button tuiButton icon="tuiIconSettings">Button</button>
 </div>

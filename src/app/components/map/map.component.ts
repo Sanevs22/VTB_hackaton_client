@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as L from 'leaflet';
-import { Subscription } from 'rxjs';
+import { Subscription, skip } from 'rxjs';
+import { Point } from 'src/app/interfaces/point';
 import { MapService } from 'src/app/services/map.service';
 
 @Component({
@@ -29,7 +30,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private initMap() {
-    this.map = L.map('map');
+    this.map = L.map('map', { zoomControl: false });
     L.tileLayer(
       'https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=VJR3KKJXMRREHh1i0Opj',
       {
@@ -40,14 +41,18 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   private getUserGeolocation() {
-    this.subUserCoordinates = this.mapService.userCoordinates.subscribe(
-      (point) => {
-        if (this.userMarker) this.userMarker.remove();
+    this.subUserCoordinates = this.mapService.userCoordinates
+      .pipe(skip(1))
+      .subscribe((point) => {
+        this.drowMarket(point);
         this.map.setView([point.lat, point.lon], 15);
-        this.userMarker = L.marker([point.lat, point.lon], {
-          icon: this.userMarkerIcon,
-        }).addTo(this.map);
-      }
-    );
+      });
+  }
+
+  private drowMarket(point: Point) {
+    if (this.userMarker) this.userMarker.remove();
+    this.userMarker = L.marker([point.lat, point.lon], {
+      icon: this.userMarkerIcon,
+    }).addTo(this.map);
   }
 }
