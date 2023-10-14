@@ -1,5 +1,9 @@
 <div *ngIf="departmentList !== null && departmentList.length > 0" class="main">
-  <div *ngFor="let department of departmentList; let i = index" class="block">
+  <div
+    *ngFor="let department of departmentList; let i = index"
+    class="block"
+    (click)="selectDepartment(department)"
+  >
     <div>
       <img src="./assets/marketDepartment.png" alt="point" />
     </div>

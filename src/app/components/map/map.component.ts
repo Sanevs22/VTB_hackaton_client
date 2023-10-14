@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as L from 'leaflet';
-import { Subscription, skip } from 'rxjs';
+import { BehaviorSubject, Subscription, debounceTime, skip, take } from 'rxjs';
 import { Department } from 'src/app/interfaces/department';
 import { Point } from 'src/app/interfaces/point';
 import { ApiService } from 'src/app/services/api.service';
@@ -25,6 +25,15 @@ export class MapComponent implements OnInit, OnDestroy {
   });
 
   departments: Department[] = [];
+  private departmentMarkers: L.Marker[] = [];
+
+  public moveEvent = new BehaviorSubject<{ zoom: number; point: Point }>({
+    zoom: 15,
+    point: {
+      lon: 37.631299,
+      lat: 55.757009,
+    },
+  });
 
   constructor(
     private readonly mapService: MapService,
@@ -34,23 +43,32 @@ export class MapComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.initMap();
     this.getUserGeolocation();
-    this.drowDepartmentMarket(
-      {
-        lon: 37.631299,
-        lat: 55.757009,
-      },
-      15
-    );
+    this.drowDepartmentMarket();
+
+    this.map.on('move', () => {
+      this.moveEvent.next({
+        zoom: this.map.getZoom(),
+        point: {
+          lon: this.map.getCenter().lng,
+          lat: this.map.getCenter().lat,
+        },
+      });
+    });
+
+    this.moveEvent.pipe(debounceTime(300)).subscribe((e) => {
+      this.apiService.getDepartmentsList(e.point, e.zoom);
+    });
   }
 
   public ngOnDestroy(): void {
     this.subUserCoordinates.unsubscribe();
   }
   private initMap() {
-    this.map = L.map('map', { zoomControl: false }).setView(
-      [55.757009, 37.631299],
-      15
-    );
+    this.map = L.map('map', {
+      zoomControl: false,
+      minZoom: 13,
+      maxZoom: 17,
+    }).setView([55.757009, 37.631299], 15);
     L.tileLayer(
       'https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=VJR3KKJXMRREHh1i0Opj',
       {
@@ -76,17 +94,16 @@ export class MapComponent implements OnInit, OnDestroy {
     }).addTo(this.map);
   }
 
-  private async drowDepartmentMarket(point: Point, zoom: number) {
-    this.departments = await this.apiService.getDepartmentFromPointAndZoom(
-      point,
-      zoom
-    );
-    console.log(this.departments);
+  private async drowDepartmentMarket() {
+    this.departments = await this.apiService.getDepartments();
+    this.departmentMarkers.map((i) => i.remove());
+    this.departmentMarkers = [];
     if (this.departments.length > 0) {
       this.departments.map((i) => {
-        L.marker([i.officePoint.lat, i.officePoint.lon], {
+        const marker = L.marker([i.officePoint.lat, i.officePoint.lon], {
           icon: this.departmentMarkerIcon,
         }).addTo(this.map);
+        this.departmentMarkers.push(marker);
       });
     }
   }

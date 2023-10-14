@@ -17,9 +17,9 @@
     </tui-input>
   </form>
   <br />
-  <div class="list">
+  <div>
     <app-department-list
-      [departmentList]="this.apiService.departmentList | async"
+      [departmentList]="this.apiService.departmentListText | async"
     />
   </div>
 </div>

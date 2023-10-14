@@ -6,7 +6,7 @@ export interface Department {
   address: string;
   officePoint: Point;
   status: string;
-  hasRamp: boolean;
+  hasRamp: boolean | null;
   openHoursData: OpenHoursData[];
   openHoursIndividualData: OpenHoursData[];
   servicesData: {
@@ -17,5 +17,5 @@ export interface Department {
 
 export interface OpenHoursData {
   days: string;
-  hours: string;
+  hours: string | null;
 }

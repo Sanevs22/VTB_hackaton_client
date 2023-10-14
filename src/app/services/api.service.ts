@@ -4,6 +4,7 @@ import { Point } from '../interfaces/point';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { Address } from '../interfaces/address';
 import { Department } from '../interfaces/department';
+import { offeser } from './offeser';
 
 const URL = 'https://73fqls6k-5211.euw.devtunnels.ms';
 
@@ -12,6 +13,7 @@ const URL = 'https://73fqls6k-5211.euw.devtunnels.ms';
 })
 export class ApiService {
   public departmentList = new BehaviorSubject<Department[]>([]);
+  public departmentListText = new BehaviorSubject<Department[]>([]);
 
   constructor(private readonly http: HttpClient) {}
 
@@ -33,13 +35,24 @@ export class ApiService {
     return point;
   }
 
-  public async getDepartmentFromPointAndZoom(point: Point, zoom: number) {
-    const department = await firstValueFrom(
-      this.http.get<Department[]>(
-        `${URL}/api/Offices/${zoom}/?x=${point.lon}&y=${point.lat}`
-      )
-    );
+  public async getDepartments() {
+    const department = offeser;
     this.departmentList.next(department);
     return department;
+  }
+
+  public getDepartmentsList(point: Point, zoom: number) {
+    const department = offeser
+      .filter(
+        (i) =>
+          i.officePoint.lat < point.lat + 0.0002 * ((18 - zoom) * 20) &&
+          i.officePoint.lat > point.lat - 0.0002 * ((18 - zoom) * 20)
+      )
+      .filter(
+        (i) =>
+          i.officePoint.lon < point.lon + 0.0002 * ((18 - zoom) * 20) &&
+          i.officePoint.lon > point.lon - 0.0002 * ((18 - zoom) * 20)
+      );
+    this.departmentListText.next(department);
   }
 }

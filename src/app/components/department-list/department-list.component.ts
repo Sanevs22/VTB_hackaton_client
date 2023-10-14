@@ -9,4 +9,8 @@ import { Department } from 'src/app/interfaces/department';
 export class DepartmentListComponent {
   @Input()
   departmentList: Department[] | null = [];
+
+  selectDepartment(e: any) {
+    console.log(e);
+  }
 }
