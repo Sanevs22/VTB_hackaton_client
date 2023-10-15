@@ -27,3 +27,18 @@
 <ng-template #content>
   <tui-loader [showLoader]="true"></tui-loader>
 </ng-template>
+
+<ng-template #withdrawTemplate polymorpheus class="wind">
+  <p>
+    <strong>Это самый быстрый маршрут с учетом очередей</strong>
+  </p>
+  <button
+    appearance="outline"
+    size="m"
+    tuiButton
+    type="button"
+    (click)="move()"
+  >
+    Перейти
+  </button>
+</ng-template>

@@ -21,6 +21,7 @@ import {
 import { TuiTableModule, TuiTableFiltersModule } from '@taiga-ui/addon-table';
 import { ComponentsModule } from './components/components.module';
 import { HttpClientModule } from '@angular/common/http';
+import { tuiSvgOptionsProvider } from '@taiga-ui/core';
 
 @NgModule({
   declarations: [AppComponent],

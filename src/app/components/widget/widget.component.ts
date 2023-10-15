@@ -1,4 +1,11 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { TuiAlertService } from '@taiga-ui/core';
 import { Subscription, debounceTime, filter, map, skip, tap } from 'rxjs';
@@ -6,6 +13,9 @@ import { Department } from 'src/app/interfaces/department';
 import { Point } from 'src/app/interfaces/point';
 import { ApiService } from 'src/app/services/api.service';
 import { MapService } from 'src/app/services/map.service';
+import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import { TuiAlertContext } from '@taiga-ui/cdk';
+import { TuiAlertOptions } from '@taiga-ui/core';
 
 @Component({
   selector: 'app-widget',
@@ -14,6 +24,8 @@ import { MapService } from 'src/app/services/map.service';
 })
 export class WidgetComponent implements OnInit, OnDestroy {
   private subUserAddress!: Subscription;
+  @ViewChild('withdrawTemplate')
+  withdrawTemplate?: TemplateRef<TuiAlertContext<TuiAlertOptions<unknown>>>;
 
   constructor(
     public readonly apiService: ApiService,
@@ -34,6 +46,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
       });
   }
 
+  optimal!: Department;
   text: string | null = '22';
   addressForm = new FormGroup({
     addressValue: new FormControl(''),
@@ -67,23 +80,24 @@ export class WidgetComponent implements OnInit, OnDestroy {
     if (res.length > 0) {
       console.log('res', this.addressForm.controls.addressValue.value, res);
       this.mapService.setUserGeolocation(res[0].point);
-      let optimal = await this.apiService.getOptimai(res[0].point);
-      this.showOptimal(optimal);
+      this.optimal = await this.apiService.getOptimai(res[0].point);
+      this.showOptimal();
     }
     this.addressArrString = addreses.map((i) => i.displayName);
     this.addressArr = addreses;
   }
 
-  showOptimal(dep: Department) {
+  move() {
+    this.apiService.departmentOptimal.next([this.optimal]);
+  }
+
+  showOptimal() {
     this.alerts
-      .open(
-        `${dep.address} <br/> <strong>Это самый быстрый маршрут с учетом очередей</strong>`,
-        {
-          status: 'success',
-          label: 'Нашли для вас оптимальный офис банка',
-          autoClose: false,
-        }
-      )
+      .open(this.withdrawTemplate, {
+        status: 'success',
+        label: 'Нашли для вас оптимальный офис банка',
+        autoClose: false,
+      })
       .subscribe();
   }
 }

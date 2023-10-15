@@ -67,7 +67,6 @@ export class ApiService {
       )
     );
     console.log(otimal);
-    this.departmentOptimal.next([otimal]);
     return otimal;
   }
 }

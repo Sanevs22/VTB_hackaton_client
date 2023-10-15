@@ -31,6 +31,21 @@ export class MapComponent implements OnInit, OnDestroy {
     iconUrl: './assets/marketDepartment.png',
   });
 
+  private homeIcon = L.icon({
+    iconUrl: './assets/home.png',
+    iconSize: [62, 62],
+  });
+
+  private boxIcon = L.icon({
+    iconUrl: './assets/box.png',
+    iconSize: [62, 62],
+  });
+
+  private aitIcon = L.icon({
+    iconUrl: './assets/air.png',
+    iconSize: [92, 92],
+  });
+
   departments: Department[] = [];
   private departmentMarkers: L.Marker[] = [];
 
@@ -74,6 +89,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.apiService.departmentOptimal
       .pipe(skip(1))
       .subscribe((e) => this.showDepartment(e[0].officePoint));
+    this.partner();
   }
 
   public ngOnDestroy(): void {
@@ -154,5 +170,34 @@ export class MapComponent implements OnInit, OnDestroy {
       lon: e.lon,
     });
     this.map.setView([e.lat, e.lon], 17);
+  }
+
+  partner() {
+    L.marker([55.7561, 37.6342], {
+      icon: this.homeIcon,
+    })
+      .addTo(this.map)
+      .bindPopup(
+        '<strong> Льготная ипотека на строительство дома от 4,6%</strong> <br/>Купите земельный участок и постройте дом вашей мечты с льготной ипотекой <a href="https://www.vtb.ru/personal/ipoteka/"  target="_blank">у нас на сайте </a>'
+      )
+      .openPopup();
+
+    L.marker([55.75, 37.6], {
+      icon: this.boxIcon,
+    })
+      .addTo(this.map)
+      .bindPopup(
+        '<strong>Получи "Мультибонус" </strong> <br/>Кешбэк до 30% Мультибонусами за покупки у партнёров <a href="https://multibonus.ru/"  target="_blank">у нас на сайте </a>'
+      )
+      .openPopup();
+
+    L.marker([55.6053, 37.2872], {
+      icon: this.aitIcon,
+    })
+      .addTo(this.map)
+      .bindPopup(
+        '<strong>Путешествуйте с комфортом </strong> <br/>Более 100 бизнес-залов Для вас и ваших спутников, независимо от того, как вы путешествуете: самолетом или поездом <a href="https://www.vtb.ru/privilegia/mir-pass/"  target="_blank">у нас на сайте </a>'
+      )
+      .openPopup();
   }
 }
