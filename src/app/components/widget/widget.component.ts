@@ -1,6 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { TuiAlertService } from '@taiga-ui/core';
 import { Subscription, debounceTime, filter, map, skip, tap } from 'rxjs';
+import { Department } from 'src/app/interfaces/department';
 import { Point } from 'src/app/interfaces/point';
 import { ApiService } from 'src/app/services/api.service';
 import { MapService } from 'src/app/services/map.service';
@@ -15,7 +17,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   constructor(
     public readonly apiService: ApiService,
-    public readonly mapService: MapService
+    public readonly mapService: MapService,
+    @Inject(TuiAlertService) private readonly alerts: TuiAlertService
   ) {}
 
   ngOnInit(): void {
@@ -64,8 +67,23 @@ export class WidgetComponent implements OnInit, OnDestroy {
     if (res.length > 0) {
       console.log('res', this.addressForm.controls.addressValue.value, res);
       this.mapService.setUserGeolocation(res[0].point);
+      let optimal = await this.apiService.getOptimai(res[0].point);
+      this.showOptimal(optimal);
     }
     this.addressArrString = addreses.map((i) => i.displayName);
     this.addressArr = addreses;
+  }
+
+  showOptimal(dep: Department) {
+    this.alerts
+      .open(
+        `${dep.address} <br/> <strong>Это самый быстрый маршрут с учетом очередей</strong>`,
+        {
+          status: 'success',
+          label: 'Нашли для вас оптимальный офис банка',
+          autoClose: false,
+        }
+      )
+      .subscribe();
   }
 }

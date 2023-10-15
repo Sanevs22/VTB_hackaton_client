@@ -70,6 +70,10 @@ export class MapComponent implements OnInit, OnDestroy {
       .pipe(skip(1))
       .subscribe((p) => this.map.setView([p.lat, p.lon], 17));
     this.drowPath();
+
+    this.apiService.departmentOptimal
+      .pipe(skip(1))
+      .subscribe((e) => this.showDepartment(e[0].officePoint));
   }
 
   public ngOnDestroy(): void {
@@ -118,11 +122,11 @@ export class MapComponent implements OnInit, OnDestroy {
             icon: this.departmentMarkerIcon,
           }).addTo(this.map);
           marker.addEventListener('click', (e) => {
-            this.mapService.currentOpenDepartment.next({
+            let p: Point = {
               lat: e.latlng.lat,
               lon: e.latlng.lng,
-            });
-            this.map.setView([e.latlng.lat, e.latlng.lng], 17);
+            };
+            this.showDepartment(p);
           });
           this.departmentMarkers.push(marker);
         });
@@ -142,5 +146,13 @@ export class MapComponent implements OnInit, OnDestroy {
       this.mapPath = L.polyline(polylineArr, { color: 'blue' }).addTo(this.map);
       this.map.fitBounds(this.mapPath.getBounds());
     });
+  }
+
+  showDepartment(e: Point) {
+    this.mapService.currentOpenDepartment.next({
+      lat: e.lat,
+      lon: e.lon,
+    });
+    this.map.setView([e.lat, e.lon], 17);
   }
 }

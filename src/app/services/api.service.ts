@@ -13,6 +13,8 @@ const URL = 'https://73fqls6k-5211.euw.devtunnels.ms';
 })
 export class ApiService {
   public departmentList = new BehaviorSubject<Department[]>([]);
+  public departmentOptimal = new BehaviorSubject<Department[]>([]);
+
   public mapPath = new BehaviorSubject<{ coordinates: Point[]; time: number }>({
     coordinates: [],
     time: -2,
@@ -56,5 +58,16 @@ export class ApiService {
     );
     console.log(path);
     this.mapPath.next(path);
+  }
+
+  public async getOptimai(point: Point) {
+    const otimal = await firstValueFrom(
+      this.http.get<Department>(
+        `${URL}/api/Offices/optimum?servicesIds=1&servicesIds=2&Lon=${point.lon}&Lat=${point.lat}&SRID=4326`
+      )
+    );
+    console.log(otimal);
+    this.departmentOptimal.next([otimal]);
+    return otimal;
   }
 }
