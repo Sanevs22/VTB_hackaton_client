@@ -6,7 +6,8 @@ import { Address } from '../interfaces/address';
 import { Department } from '../interfaces/department';
 import { offeser } from './offeser';
 
-const URL = 'https://73fqls6k-5211.euw.devtunnels.ms';
+// const URL = 'https://73fqls6k-5211.euw.devtunnels.ms';
+const URL = 'http://185.119.56.17';
 
 @Injectable({
   providedIn: 'root',
@@ -56,7 +57,6 @@ export class ApiService {
         `${URL}/api/Offices/route?fLon=${from.lon}&fLat=${from.lat}&tLon=${to.lon}&tLat=${to.lat}&profile=${method}`
       )
     );
-    console.log(path);
     this.mapPath.next(path);
   }
 
@@ -66,7 +66,6 @@ export class ApiService {
         `${URL}/api/Offices/optimum?servicesIds=1&servicesIds=2&Lon=${point.lon}&Lat=${point.lat}&SRID=4326`
       )
     );
-    console.log(otimal);
     return otimal;
   }
 }

@@ -40,7 +40,6 @@ export class DepartmentListComponent implements OnInit {
         this.currentDepartment.next(
           this.departmentList.filter((i) => i.officePoint.lat === p.lat)[0]
         );
-        console.log(this.departmentList[0]);
       }
       this.isOpen = 'depart';
     });

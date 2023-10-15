@@ -78,7 +78,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
         i.displayName === String(this.addressForm.controls.addressValue.value)
     );
     if (res.length > 0) {
-      console.log('res', this.addressForm.controls.addressValue.value, res);
       this.mapService.setUserGeolocation(res[0].point);
       this.optimal = await this.apiService.getOptimai(res[0].point);
       this.showOptimal();
